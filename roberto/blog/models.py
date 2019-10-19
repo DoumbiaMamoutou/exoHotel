@@ -39,16 +39,15 @@ class Tag(models.Model):
         """Unicode representation of Tag."""
         return self.nom
 
-
 class Article(models.Model):
     """Model definition for Article."""
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='article_categorie')
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='article_tag')
+    tag = models.ManyToManyField(Tag)
     titre = models.CharField(max_length=50)
     description = models.TextField()
-    image = models.ImageField(upload_to='blog/article/image')
+    image = models.ImageField(upload_to='blog/')
     contenu = HTMLField('Content', default="null")
-    image_single = models.ImageField(upload_to='blog/article/single')
+    image_single = models.ImageField(upload_to='blog/')
     status = models.BooleanField(default=True)
     date_add = models.DateTimeField(auto_now_add=True)
     date_upd = models.DateTimeField(auto_now=True)
@@ -68,13 +67,17 @@ class Article(models.Model):
     
 class Commentaire(models.Model):
     """Model definition for Commentaire."""
-    author = models.OneToOneField(User, on_delete=models.CASCADE,related_name='author')
-    image = models.ImageField(upload_to='blog/commentaire/user')
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='article_commentaire', blank=True, null=True)
+    image = models.ImageField(upload_to='blog', default='blog/24.jpg')
+    nom = models.CharField(max_length=50, blank=True, null=True)
+    email = models.EmailField(max_length=254)
     message = models.TextField()
     website = models.URLField()
-    status = models.BooleanField(default=True)
+    status = models.BooleanField(default=False)
     date_add = models.DateTimeField(auto_now_add=True)
     date_upd = models.DateTimeField(auto_now=True)
+
+# default='profile/default.png'
 
     # TODO: Define fields here
 
@@ -86,9 +89,9 @@ class Commentaire(models.Model):
 
     def __str__(self):
         """Unicode representation of Commentaire."""
-        return self.author.username
+        return self.nom
     
-class Nexsletter(models.Model):
+class Newsletter(models.Model):
     """Model definition for Nexsletter."""
     email = models.EmailField()
     status = models.BooleanField(default=True)
@@ -114,8 +117,21 @@ class Instagram(models.Model):
         verbose_name = 'Instagram'
         verbose_name_plural = 'Instagrams'
 
+class Social(models.Model):
+    """Model definition for Social."""
+    nom = models.CharField(max_length=50)
+    lien = models.URLField()
+    status = models.BooleanField(default=True)
+    date_add = models.DateTimeField(auto_now_add=True)
+    date_upd = models.DateTimeField(auto_now=True)
+    # TODO: Define fields here
+
+    class Meta:
+        """Meta definition for Social."""
+
+        verbose_name = 'Social'
+        verbose_name_plural = 'Socials'
+
     def __str__(self):
-        """Unicode representation of Instagram."""
-        pass
-
-
+        """Unicode representation of Social."""
+        return self.nom

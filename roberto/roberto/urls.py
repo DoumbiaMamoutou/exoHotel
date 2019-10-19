@@ -26,8 +26,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('tinymce/', include('tinymce.urls')),
     path('admin/filebrowser/', site.urls),
+    path('', include('hotel.urls')),    
     path('contact/', include('contact.urls')),
     path('blog/', include('blog.urls')),
     path('conf/', include('configuration.urls')),
-    path('', include('hotel.urls')),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root= settings.STATIC_ROOT)
+    
